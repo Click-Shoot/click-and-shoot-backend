@@ -18,10 +18,8 @@ export const jwtAuthMiddleware = async (c: Context, next: Next) => {
   }
 
   try {
-    const decoded = Jwtverify(token, JWT_SECRET);
-    
+    const decoded = await Jwtverify(token, JWT_SECRET);
     c.set('user', decoded);
-
     await next();
   } catch (error) {
     console.error('Token verification error:', error);
