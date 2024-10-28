@@ -123,6 +123,8 @@ function createSlots(photographerId: mongoose.Types.ObjectId) { // Utiliser Obje
         const newUser = new UserModel({
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
+          email: faker.internet.email(),
+          password: "leMotDePasse69",
           description: faker.lorem.sentence(),
           isPhotograph: fakerisPhotograph,
           rating: fakerRating,

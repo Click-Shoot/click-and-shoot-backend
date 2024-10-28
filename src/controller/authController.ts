@@ -25,7 +25,7 @@ export const login = async (c: Context) => {
       return c.json({ message: "Invalid credentials" }, 401);
     }
 
-     const token = await JwtSign({ sub: user._id, email: user.email }, JWT_SECRET);
+     const token = await JwtSign({ sub: user._id, email: user.email,exp: Math.floor(Date.now() / 1000) + (60 * 60)}, JWT_SECRET);
 
     c.header('Authorization', `Bearer ${token}`);
     console.log("Token:", token);
