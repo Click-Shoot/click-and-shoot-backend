@@ -55,6 +55,8 @@ export const initializeUsers = async () => {
     }
   };
 
+// app.post('/login', login)
+// app.use('/api/*', middleware)
 app.route('/api', userRoutes)
 app.route('/api', slotsRoutes)
 app.route('/api', galleryRoutes)

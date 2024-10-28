@@ -1,7 +1,7 @@
 import { Context } from 'hono'
 import { UserModel } from '../models/userModel'
 import { SlotModel } from '../models/slotsModel' // Assurez-vous d'importer le modèle Slot
-
+import bcrypt from 'bcrypt'
 // Récupérer tous les utilisateurs
 export const getUsers = async (c: Context) => {
   try {
@@ -28,10 +28,34 @@ export const getUserById = async (c: Context) => {
 }
 
 // Créer un nouvel utilisateur
+
+
 export const createUserHandler = async (c: Context) => {
   try {
-    const { firstName, lastName, description, rating, tags, stuff, slotsBooked, isPhotograph } = await c.req.json()
-    const newUser = new UserModel({ firstName, lastName, description, rating, tags, stuff, slotsBooked, isPhotograph})
+    const { firstName, lastName, email, password, description, rating, tags, stuff, slotsBooked, isPhotograph } = await c.req.json()
+
+    const user = await UserModel.findOne({ email });
+
+    if (user) {
+      return c.json({ message: "email deja pris" }, 404);
+    }
+
+    // Hash le mot de passe avant de créer l'utilisateur
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const newUser = new UserModel({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword, // Enregistre le mot de passe haché
+      description,
+      rating,
+      tags,
+      stuff,
+      slotsBooked,
+      isPhotograph
+    })
+
     await newUser.save()
     return c.json(newUser, 201)
   } catch (error) {
@@ -39,14 +63,15 @@ export const createUserHandler = async (c: Context) => {
   }
 }
 
+
 // Mettre à jour un utilisateur
 export const updateUserHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
-    const { firstName, lastName, description, rating, tags, stuff, slotsBooked, isPhotograph } = await c.req.json()
+    const { firstName, lastName, email, password,  description, rating, tags, stuff, slotsBooked, isPhotograph } = await c.req.json()
     const updatedUser = await UserModel.findByIdAndUpdate(
       id,
-      { firstName, lastName, description, rating, tags, stuff, slotsBooked, isPhotograph },
+      { firstName, lastName, email, password,  description, rating, tags, stuff, slotsBooked, isPhotograph },
       { new: true }
     )
     if (updatedUser) {

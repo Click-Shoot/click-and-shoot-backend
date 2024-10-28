@@ -1,17 +1,14 @@
-import mongoose, { Document, Schema } from 'mongoose'
-import { IUser } from './userModel'; 
+// models/galleryModel.ts
+import mongoose, { Schema, Document } from 'mongoose';
 
-// Interface TypeScript pour la galerie
-export interface IGallery extends Document {
-  urls: string[]
-  idPhotograph: IUser['_id'];
-
+interface IGallery extends Document {
+  photographId: mongoose.Types.ObjectId;
+  urls: string[]; // Tableau d'URLs pour plusieurs images
 }
 
-// Schéma Mongoose pour la galerie
-const gallerySchema: Schema = new Schema({
-  urls: { type: [String], required: true }, 
-  idPhotograph: { type: Schema.Types.ObjectId, ref: 'User', required: true }
-})
+const GallerySchema = new Schema({
+  photographId: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
+  urls: [{ type: String, required: true }], // Tableau d'URLs
+});
 
-export const GalleryModel = mongoose.model<IGallery>('Gallery', gallerySchema)
+export const GalleryModel = mongoose.model<IGallery>('Gallery', GallerySchema);

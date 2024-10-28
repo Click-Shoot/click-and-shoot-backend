@@ -75,48 +75,12 @@ function createStuff() {
   return stuff;
 }
 
-export async function createGalleryForPhotographers() {
-  try {
-      // Récupérer tous les utilisateurs qui sont photographes
-      const photographers = await UserModel.find({ isPhotograph: true });
-      
-      // Boucle à travers chaque photographe pour créer une galerie
-      const galleryPromises = photographers.map(async (photographer) => {
-          const photoCount = faker.number.int({ min: 1, max: 5 }); // Nombre d'images à créer
-          const galleryItems = []; // Tableau pour stocker les images à créer
-
-          for (let i = 0; i < photoCount; i++) {
-              // Créer un nouvel élément de galerie
-              const newGalleryItem = new GalleryModel({
-                  url: faker.image.avatar(), // Remplacer par une image de votre choix
-                  photographId: photographer._id // ID du photographe
-              });
-
-              // Ajouter l'élément au tableau
-              galleryItems.push(newGalleryItem);
-          }
-
-          // Enregistrer tous les éléments de galerie dans la base de données
-          return GalleryModel.insertMany(galleryItems);
-      });
-
-      // Attendre que toutes les promesses soient résolues
-      const createdGalleries = await Promise.all(galleryPromises);
-      console.log(`Successfully created galleries for ${createdGalleries.length} photographers.`);
-      
-      return createdGalleries; // Retourner les galeries créées
-  } catch (error) {
-      console.error('Error creating galleries for photographers:', error);
-      throw error; // Propager l'erreur pour gérer plus tard si besoin
-  }
-}
-
 // Fonction pour créer des slots
 function createSlots(photographerId: mongoose.Types.ObjectId) { // Utiliser ObjectId ici
     const slots = [];
     const startDate = faker.date.recent(); // Date de départ pour le créneau
   
-    for (let i = 0; i < 1; i++) { // Crée 5 créneaux par photographe
+    for (let i = 0; i < 4; i++) { // Crée 5 créneaux par photographe
       const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // Intervalle d'une heure
   
       const slot = new SlotModel({
@@ -125,50 +89,69 @@ function createSlots(photographerId: mongoose.Types.ObjectId) { // Utiliser Obje
         location: cities[faker.number.int({ min: 0, max: cities.length - 1 })],
         photographId: photographerId, // Utilisez ObjectId ici
       });
+  
       slots.push(slot);
     }
+  
     return slots;
   }
-export const getFaker = async (c: Context) => {
-  try {
-    const users = [];
-    for (let i = 0; i < 1; i++) {
-      const fakerisPhotograph = faker.datatype.boolean();
-      const fakerRating = fakerisPhotograph ? createRatings() : [];
-      const fakerTags = fakerisPhotograph ? createTags() : [];
-      const fakerStuff = fakerisPhotograph ? createStuff() : [];
-      const newUser = new UserModel({
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        description: faker.lorem.sentence(),
-        isPhotograph: fakerisPhotograph,
-        rating: fakerRating,
-        tags: fakerTags,
-        stuff: fakerStuff,
-      });
-
-      users.push(newUser);
+  function createGallerys(photographerId: mongoose.Types.ObjectId) {
+    const fakergallery = [];
+    const numgallery = faker.number.int({ min: 1, max: 5 });
+    for (let i = 0; i < numgallery; i++) {
+        fakergallery.push(faker.image.avatar());
     }
+    console.log(fakergallery)
+    const gallerys = new GalleryModel({
+      urls: fakergallery,
+      photographId: photographerId,
+    });
+    console.log(gallerys)
 
-    const insertedUsers = await UserModel.insertMany(users);
 
-    // Création des slots pour chaque photographe inséré
-    const slots = [];    
-    const gallery = [];
-    for (const user of insertedUsers) {
-        if(user.isPhotograph== true){
-            const userSlots = createSlots(user._id.toString()); 
-            const userGallery = createGallery(user._id.toString()); 
-            slots.push(...userSlots);
-            gallery.push(...userGallery);
-        }
-    }
-    await SlotModel.insertMany(slots); 
-    await GalleryModel.insertMany(gallery); 
-
-    return c.json({ message: 'Data generated successfully', users: insertedUsers, slots });
-  } catch (error) {
-    console.error("Error generating data:", error);
-    return c.json({ error: "Failed to generate data" }, 500);
+    return gallerys; 
   }
-};
+  export const getFaker = async (c: Context) => {
+    try {
+      const users = [];
+      for (let i = 0; i < 4; i++) {
+        // const fakerisPhotograph = faker.datatype.boolean();
+        const fakerisPhotograph = true;
+        const fakerRating = fakerisPhotograph ? createRatings() : [];
+        const fakerTags = fakerisPhotograph ? createTags() : [];
+        const fakerStuff = fakerisPhotograph ? createStuff() : [];
+        const newUser = new UserModel({
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          description: faker.lorem.sentence(),
+          isPhotograph: fakerisPhotograph,
+          rating: fakerRating,
+          tags: fakerTags,
+          stuff: fakerStuff,
+        });
+  
+        users.push(newUser);
+      }
+  
+      const insertedUsers = await UserModel.insertMany(users);
+  
+      const slots = [];
+      const gallerys = [];
+      for (const user of insertedUsers) {
+        if (user.isPhotograph) {
+          const userSlots = createSlots(user._id.toString());
+          slots.push(...userSlots);
+  
+          const userGallery = createGallerys(user._id.toString());
+          gallerys.push(userGallery); // Push the single gallery object into the array
+        }
+      }
+  
+      await SlotModel.insertMany(slots);
+      await GalleryModel.insertMany(gallerys); // Insert the gallery array
+      return c.json({ message: 'Data generated successfully', users: insertedUsers, slots,gallerys });
+    } catch (error) {
+      console.error("Error generating data:", error);
+      return c.json({ error: "Failed to generate data" }, 500);
+    }
+  };
