@@ -658,6 +658,9 @@ app.get("/doc", (c) => {
           },
         },
       },
+    },
+  });
+})
 
 
 // app.post('/login', login)
