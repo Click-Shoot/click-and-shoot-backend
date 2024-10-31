@@ -9,6 +9,7 @@ import { create } from 'domain'
 import { createUserHandler } from './controller/userController'
 import { UserModel } from './models/userModel';
 import fakerRoutes from './routes/fakerRoutes'
+import { cors } from 'hono/cors'
 
 
 
@@ -57,6 +58,14 @@ export const initializeUsers = async () => {
 
 // app.post('/login', login)
 // app.use('/api/*', middleware)
+app.use(
+  '*',
+  cors({
+    origin: 'http://localhost:4000',  // autoriser uniquement cette origine
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'], // les méthodes HTTP autorisées
+    allowHeaders: ['Content-Type', 'Authorization'] // les en-têtes autorisés
+  })
+)
 app.route('/api', userRoutes)
 app.route('/api', slotsRoutes)
 app.route('/api', galleryRoutes)
