@@ -19,6 +19,7 @@ import {
 } from "./controller/userController";
 import { login, middleware } from "./controller/authController";
 import { jwtAuthMiddleware } from "./middleware/middlewareAuth";
+import { cors } from 'hono/cors'
 
 // Créer l'application Hono
 const app = new Hono();
@@ -658,10 +659,22 @@ app.get("/doc", (c) => {
         },
       },
 
-     
-    },
-  });
-});
+
+// app.post('/login', login)
+// app.use('/api/*', middleware)
+app.use(
+  '*',
+  cors({
+    origin: 'http://localhost:4000',  // autoriser uniquement cette origine
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'], // les méthodes HTTP autorisées
+    allowHeaders: ['Content-Type', 'Authorization'] // les en-têtes autorisés
+  })
+)
+app.route('/api', userRoutes)
+app.route('/api', slotsRoutes)
+app.route('/api', galleryRoutes)
+app.route('/api', fakerRoutes)
+
 
 // Démarrer le serveur sur le port 3000
 serve(app);
