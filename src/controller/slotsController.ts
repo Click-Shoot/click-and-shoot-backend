@@ -26,6 +26,37 @@ export const getSlotById = async (c: Context) => {
   }
 }
 
+export const getSlotByReserve = async (c: Context) => {
+  try {
+    const id = c.req.param('photographId');
+
+    // Récupération du paramètre "photograph" depuis la requête
+    const isPhotograph = c.req.query('photograph') === 'true';
+
+    // Construire la requête en fonction de "photograph"
+    console.log(isPhotograph)
+    let slots;
+    if (isPhotograph) {
+      slots = await SlotModel.find({ photographId: id });
+    } else {
+      slots = await SlotModel.find({ customerId: id });
+    }
+
+    // Vérifie si des slots ont été trouvés
+    if (slots.length === 0) {
+      return c.json({ message: 'No slots found for the given criteria' }, 404);
+    }
+
+    // Retourne les slots trouvés
+    return c.json(slots);
+  } catch (error) {
+    // Gestion des erreurs
+    return c.json({ message: 'Error fetching slots', error: error }, 500);
+  }
+};
+
+// Route associée
+
 // Créer un nouveau slot
 export const createSlotHandler = async (c: Context) => {
   try {

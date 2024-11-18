@@ -245,39 +245,6 @@ swaggerRoutes.get("/doc", (c) => {
           },
         },
       },
-      "/api/users/{id}/slotsBooked": {
-        get: {
-          summary: "Retrieve booked slots by user ID",
-          tags: ["Users"],
-          parameters: [
-            {
-              name: "id",
-              in: "path",
-              required: true,
-              description: "The ID of the user to retrieve booked slots for",
-              type: "string",
-            },
-          ],
-          responses: {
-            200: {
-              description: "A list of booked slots for the user",
-              schema: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    slotId: { type: "string" },
-                    time: { type: "string", format: "date-time" },
-                  },
-                },
-              },
-            },
-            404: {
-              description: "User not found",
-            },
-          },
-        },
-      },
       "/api/photographers": {
         get: {
           summary: "Retrieve all photographers",
@@ -585,6 +552,150 @@ swaggerRoutes.get("/doc", (c) => {
             },
             404: {
               description: "User not found",
+            },
+          },
+        },
+      },
+      "/api/tags": {
+        get: {
+          summary: "Retrieve all tags",
+          tags: ["Tags"],
+          security: [{ Bearer: [] }],
+          responses: {
+            200: {
+              description: "A list of tags",
+              schema: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "string" },
+                    label: { type: "string" },
+                    images : { type: "string" },
+                  },
+                },
+              },
+            },
+            404: {
+              description: "User not found",
+            },
+          },
+        },
+      },
+      "/api/tags/{id}": {
+        get: {
+          summary: "Retrieve tags by ID",
+          tags: ["Tags"],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              description: "The ID of the tags",
+              type: "string",
+            },
+          ],
+          responses: {
+            200: {
+              description: "tags details",
+              schema: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  title: { type: "string" },
+                  description: { type: "string" },
+                  userId: { type: "string" },
+                },
+              },
+            },
+            404: {
+              description: "tags not found",
+            },
+          },
+        },
+        post: {
+          summary: "Create a new tags",
+          tags: ["Tags"],
+          security: [{ Bearer: [] }],
+          parameters: [
+            {
+              name: "tags",
+              in: "body",
+              required: true,
+              description: "tag data to create",
+              schema: {
+                type: "object",
+                properties: {
+                  label: { type: "string" },
+                  image: { type: "string" },
+                },
+                required: ["label", "image"],
+              },
+            },
+          ],
+          responses: {
+            201: {
+              description: "tag created successfully",
+            },
+            400: {
+              description: "Invalid input",
+            },
+          },
+        },
+        put: {
+          summary: "Update tags by ID",
+          tags: ["Tags"],
+          security: [{ Bearer: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              description: "The ID of the Tags",
+              type: "string",
+            },
+            {
+              name: "gallery",
+              in: "body",
+              required: true,
+              description: "Tags data to update",
+              schema: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  description: { type: "string" },
+                },
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Tags updated successfully",
+            },
+            404: {
+              description: "Tags not found",
+            },
+          },
+        },
+        delete: {
+          summary: "Tags gallery by ID",
+          tags: ["Tags"],
+          security: [{ Bearer: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              description: "The ID of the Tags",
+              type: "string",
+            },
+          ],
+          responses: {
+            204: {
+              description: "Tags deleted successfully",
+            },
+            404: {
+              description: "Tags not found",
             },
           },
         },

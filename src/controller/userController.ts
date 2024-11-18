@@ -100,21 +100,21 @@ export const deleteUserHandler = async (c: Context) => {
 }
 
 // Récupérer tous les slots réservés par un utilisateur avec les détails des slots
-export const getSlotsBookedByUser = async (c: Context) => {
-  try {
-    const userId = c.req.param('id') 
-    const user = await UserModel.findById(userId)
+// export const getSlotsBookedByUser = async (c: Context) => {
+//   try {
+//     const userId = c.req.param('id') 
+//     const user = await UserModel.findById(userId)
 
-    if (!user) {
-      return c.json({ message: 'User not found' }, 404)
-    }
+//     if (!user) {
+//       return c.json({ message: 'User not found' }, 404)
+//     }
 
-    const slots = await SlotModel.find({ _id: { $in: user.slotsBooked } }) 
-    return c.json(slots) 
-  } catch (error) {
-    return c.json({ message: 'Error fetching slots booked', error }, 500)
-  }
-}
+//     const slots = await SlotModel.find({ _id: { $in: user.slotsBooked } }) 
+//     return c.json(slots) 
+//   } catch (error) {
+//     return c.json({ message: 'Error fetching slots booked', error }, 500)
+//   }
+// }
 
 // Récupérer tous les slots réservés par un utilisateur
 export const getSlotsByUserId = async (c: Context) => {

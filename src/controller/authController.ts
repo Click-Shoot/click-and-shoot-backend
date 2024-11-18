@@ -40,7 +40,6 @@ export const login = async (c: Context) => {
         rating: user.rating,
         tags: user.tags,
         stuff: user.stuff,
-        slotsBooked: user.slotsBooked,
         isPhotograph: user.isPhotograph
       },
       token: token

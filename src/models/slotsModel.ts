@@ -7,7 +7,7 @@ export interface ISlot extends Document {
   location: string;
   photographId: mongoose.Types.ObjectId; 
   customersId: mongoose.Types.ObjectId;
-  isReserved: boolean 
+  isReserved: boolean ;
 }
 
 // Schéma Mongoose pour le slot
