@@ -8,6 +8,7 @@ import { connectDB } from "./db";
 import fakerRoutes from "./routes/fakerRoutes";
 import generateFixtures from './fixtures/generateFixtures';
 import { cors } from 'hono/cors'
+import tagRoutes from "./routes/tagRoutes";
 
 // Créer l'application Hono
 const app = new Hono();
@@ -25,6 +26,7 @@ app.route("/api", slotsRoutes);
 app.route("/api", galleryRoutes);
 app.route("/api", fakerRoutes);
 app.route("/api", swaggerRoutes);
+app.route("/api", tagRoutes);
 
 app.use(
   '*',

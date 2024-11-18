@@ -8,7 +8,7 @@ export interface IUser extends Document {
   password:string
   description: string
   rating: number[] 
-  tags: string[]   
+  tags: mongoose.Types.ObjectId[];  
   stuff: string[]  
   slotsBooked: string[] 
   isPhotograph: boolean 
@@ -24,7 +24,7 @@ const userSchema: Schema = new Schema({
   password:{ type: String, required: true },
   description:{ type: String, required: true },
   rating: { type: [Number], default: [] }, 
-  tags: { type: [String], default: [] },   
+  tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }], 
   stuff: { type: [String], default: [] },   
   slotsBooked: { type: [String], default: [] },
   isPhotograph: { type: Boolean, default: false },
