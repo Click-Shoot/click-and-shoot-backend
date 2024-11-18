@@ -8,6 +8,7 @@ import {
   getSlotsBookedByUser,
   getSlotsByUserId,
   getPhotographers,
+  getUsersByTag
 } from '../controller/userController'
 import { login, middleware } from '../controller/authController'
 import { use } from 'hono/jsx'
@@ -35,6 +36,7 @@ userRoutes.delete('/users/:id', jwtAuthMiddleware, deleteUserHandler)
 userRoutes.get('/users/:id/slotsBooked', jwtAuthMiddleware, getSlotsBookedByUser)
 userRoutes.get('/users/:id/slots', jwtAuthMiddleware, getSlotsByUserId)
 userRoutes.post('/login', login)
+userRoutes.get('/users/photographers/:tag', jwtAuthMiddleware, getUsersByTag);
 
 
 

@@ -145,6 +145,28 @@ export const getPhotographers = async (c: Context) => {
   }
 };
 
+export const getUsersByTag = async (c: Context) => {
+  try {
+    const tag = c.req.param('tag'); // Récupère le tag depuis la requête
+
+    if (!tag) {
+      return c.json({ message: 'Tag is required' }, 400);
+    }
+
+    // Rechercher les utilisateurs qui ont ce tag
+    const users = await UserModel.find({ tags: tag });
+
+    if (users.length === 0) {
+      return c.json({ message: 'No users found with this tag' }, 404);
+    }
+
+    return c.json({ success: true, users });
+  } catch (error) {
+    console.error('Error fetching users by tag:', error);
+    return c.json({ message: 'Error fetching users by tag', error }, 500);
+  }
+};
+
 
 
 
