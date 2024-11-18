@@ -89,16 +89,16 @@ export const deleteGalleryHandler = async (c: Context) => {
 // Récupérer les galeries par idPhotograph
 export const getGalleriesByUser = async (c: Context) => {
   try {
-    const { userId } = c.req.param();
+    const { id } = c.req.param();
 
     // Vérifier si l'utilisateur existe
-    const user = await UserModel.findById(userId);
+    const user = await UserModel.findById(id);
     if (!user) {
       return c.json({ message: 'User not found' }, 404);
     }
 
     // Récupérer les galeries associées à ce photographe
-    const galleries = await GalleryModel.find({ idPhotograph: userId });
+    const galleries = await GalleryModel.find({ photographId: id });
 
     if (galleries.length === 0) {
       return c.json({ message: 'No galleries found for this user' }, 404);

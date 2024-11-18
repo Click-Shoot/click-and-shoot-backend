@@ -12,8 +12,18 @@ import {
 import { login, middleware } from '../controller/authController'
 import { use } from 'hono/jsx'
 import { jwtAuthMiddleware } from '../middleware/middlewareAuth'
+import { cors } from 'hono/cors'
 
 const userRoutes = new Hono()
+
+userRoutes.use(
+    '*',
+    cors({
+      origin: 'http://localhost:4000',  // autoriser uniquement cette origine
+      allowMethods: ['GET', 'POST', 'PUT', 'DELETE'], // les méthodes HTTP autorisées
+      allowHeaders: ['Content-Type', 'Authorization'] // les en-têtes autorisés
+    })
+)
 
 // Définition des routes
 userRoutes.get('/users', jwtAuthMiddleware, getUsers)
