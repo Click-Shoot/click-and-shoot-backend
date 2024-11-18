@@ -6,6 +6,8 @@ export interface ISlot extends Document {
   end_date: Date;
   location: string;
   photographId: mongoose.Types.ObjectId; 
+  customersId: mongoose.Types.ObjectId;
+  isReserved: boolean 
 }
 
 // Schéma Mongoose pour le slot
@@ -17,7 +19,12 @@ const slotSchema: Schema = new Schema({
     type: Schema.Types.ObjectId, 
     ref: 'User',
     required: true 
-  }
+  },
+  customersId: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'User',
+  },
+  isReserved: { type: Boolean, default: false },
 });
 
 export const SlotModel = mongoose.model<ISlot>('Slot', slotSchema);

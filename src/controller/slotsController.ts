@@ -29,8 +29,8 @@ export const getSlotById = async (c: Context) => {
 // Créer un nouveau slot
 export const createSlotHandler = async (c: Context) => {
   try {
-    const { start_date, end_date, location, photographId } = await c.req.json()
-    const newSlot = new SlotModel({ start_date, end_date, location, photographId })
+    const { start_date, end_date, location, photographId, customersId } = await c.req.json()
+    const newSlot = new SlotModel({ start_date, end_date, location, photographId, customersId })
     await newSlot.save()
     return c.json(newSlot, 201)
   } catch (error) {
@@ -42,10 +42,10 @@ export const createSlotHandler = async (c: Context) => {
 export const updateSlotHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
-    const { start_date, end_date, location, photographId } = await c.req.json()
+    const { start_date, end_date, location, photographId, customersId } = await c.req.json()
     const updatedSlot = await SlotModel.findByIdAndUpdate(
       id,
-      { start_date, end_date, location, photographId },
+      { start_date, end_date, location, photographId,customersId },
       { new: true }
     )
     if (updatedSlot) {

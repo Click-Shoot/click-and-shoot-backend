@@ -10,7 +10,6 @@ export interface IUser extends Document {
   rating: number[] 
   tags: mongoose.Types.ObjectId[];  
   stuff: string[]  
-  slotsBooked: string[] 
   isPhotograph: boolean 
   price : number
   avatar: string
