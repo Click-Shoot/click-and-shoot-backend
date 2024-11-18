@@ -5,31 +5,19 @@ import slotsRoutes from "./routes/slotsRoutes";
 import galleryRoutes from "./routes/galleryRoutes";
 import swaggerRoutes from "./routes/swagger";
 import { connectDB } from "./db";
-import { UserModel } from "./models/userModel";
-import { GalleryModel } from "./models/galleryModel";
 import fakerRoutes from "./routes/fakerRoutes";
-import { SwaggerUI } from "@hono/swagger-ui";
-
-import {
-  getUsers,
-  getUserById,
-  createUserHandler,
-  updateUserHandler,
-  deleteUserHandler,
-  getSlotsBookedByUser,
-  getSlotsByUserId,
-  getPhotographers,
-} from "./controller/userController";
-import { login, middleware } from "./controller/authController";
-import { jwtAuthMiddleware } from "./middleware/middlewareAuth";
+import generateFixtures from './fixtures/generateFixtures';
 import { cors } from 'hono/cors'
-import bcrypt from "bcrypt";
 
 // Créer l'application Hono
 const app = new Hono();
 
 // Connexion à la base de données MongoDB
 connectDB();
+
+generateFixtures().catch((error) => {
+  console.error("Erreur lors de la génération des fixtures :", error);
+});
 
 // Routes
 app.route("/api", userRoutes);
@@ -38,11 +26,6 @@ app.route("/api", galleryRoutes);
 app.route("/api", fakerRoutes);
 app.route("/api", swaggerRoutes);
 
-     
-
-
-// app.post('/login', login)
-// app.use('/api/*', middleware)
 app.use(
   '*',
   cors({
@@ -55,7 +38,6 @@ app.route('/api', userRoutes)
 app.route('/api', slotsRoutes)
 app.route('/api', galleryRoutes)
 app.route('/api', fakerRoutes)
-
 
 // Démarrer le serveur sur le port 3000
 serve(app);
