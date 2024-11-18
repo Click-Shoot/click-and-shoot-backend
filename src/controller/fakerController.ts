@@ -144,10 +144,12 @@ function createSlots(photographerId: mongoose.Types.ObjectId) { // Utiliser Obje
         const fakerRating = fakerisPhotograph ? createRatings() : [];
         const fakerTags = fakerisPhotograph ? await getRandomTags() : [];
         const fakerStuff = fakerisPhotograph ? createStuff() : [];
+        const fakerfirstName = faker.person.firstName();
+        const fakerlastName = faker.person.firstName();
         const newUser = new UserModel({
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          email: faker.internet.email(),
+          firstName: fakerfirstName,
+          lastName: fakerlastName,
+          email: fakerfirstName+"."+fakerlastName+"@clickandshoot.fr",
           password: hashedPassword,
           description: faker.lorem.sentence(),
           isPhotograph: fakerisPhotograph,
