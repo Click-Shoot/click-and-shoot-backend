@@ -3,8 +3,11 @@ import { GalleryModel } from "../models/galleryModel";
 import { Hono } from "hono";
 import { MongoClient } from "mongodb";
 import { faker } from "@faker-js/faker";
+
 import { UserModel } from "../models/userModel";
 import { SlotModel } from "../models/slotsModel";
+import { TagModel } from "../models/tagModel";
+
 import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from "bcrypt";
 // Liste de villes en France
@@ -35,20 +38,38 @@ function createRatings() {
 }
 
 // Fonction pour générer des tags aléatoires à partir d'une liste prédéfinie
-function createTags() {
-  const possibleTags = ["mariage", "anniversaire", "enterrement"];
-  const numTags = faker.number.int({ min: 1, max: 3 });
-  const tags: string[] = [];
+async function createTags() {
+  const possibleTags = [
+    { "label": "Mariage", "image": "url" },
+    { "label": "Tinder & Réseaux Sociaux", "image": "url" },
+    { "label": "Portrait Artistique", "image": "url" },
+    { "label": "Grossesse & Naissance", "image": "url" },
+    { "label": "Shooting de Famille", "image": "url" },
+    { "label": "Événements", "image": "url" },
+    { "label": "Mode & Lookbook", "image": "url" },
+    { "label": "Corporate & Professionnel", "image": "url" },
+    { "label": "Culinaire & Restauration", "image": "url" },
+    { "label": "Couple & Romance", "image": "url" }
+  ];
 
-  for (let i = 0; i < numTags; i++) {
-    const randomTag =
-      possibleTags[faker.number.int({ min: 0, max: possibleTags.length - 1 })];
-    if (!tags.includes(randomTag)) {
-      tags.push(randomTag);
-    }
+  if (await TagModel.countDocuments() > 0) {
+    return;
+  }
+  // Insertion des tags dans la BDD
+  await TagModel.insertMany(possibleTags);
+}
+
+async function getRandomTags() {
+  const allTags = await TagModel.find();
+  const numTags = faker.number.int({ min: 1, max: 3 });
+  const selectedTagIds = new Set();
+
+  while (selectedTagIds.size < numTags && allTags.length > 0) {
+    const randomIndex = faker.number.int({ min: 0, max: allTags.length - 1 });
+    selectedTagIds.add(allTags[randomIndex]._id);
   }
 
-  return tags;
+  return Array.from(selectedTagIds);
 }
 
 // Fonction pour générer un ensemble aléatoire de matériel de photographe
@@ -116,11 +137,12 @@ function createSlots(photographerId: mongoose.Types.ObjectId) { // Utiliser Obje
     try {
       const users = [];
       const hashedPassword = await bcrypt.hash('password', 10);
+      await createTags();
       for (let i = 0; i < 30; i++) {
         // const fakerisPhotograph = faker.datatype.boolean();
         const fakerisPhotograph = true;
         const fakerRating = fakerisPhotograph ? createRatings() : [];
-        const fakerTags = fakerisPhotograph ? createTags() : [];
+        const fakerTags = fakerisPhotograph ? await getRandomTags() : [];
         const fakerStuff = fakerisPhotograph ? createStuff() : [];
         const newUser = new UserModel({
           firstName: faker.person.firstName(),
