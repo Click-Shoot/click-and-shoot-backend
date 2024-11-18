@@ -18,8 +18,6 @@ export const login = async (c: Context) => {
     if (!user) {
       return c.json({ message: "User not found" }, 404);
     }
-
-    // Vérifie si le mot de passe correspond
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return c.json({ message: "Invalid credentials" }, 401);
@@ -62,7 +60,7 @@ export const middleware = async (c: Context, n: Next) => {
     if (!authToken) {
       return c.json({ error: "token pas trouver" }, 401);
     }
-    let payload = null;
+    let payload = null;  
     try {
       payload = await Jwtverify(authToken, JWT_SECRET);
     } catch (error) {

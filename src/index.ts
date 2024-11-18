@@ -15,9 +15,9 @@ const app = new Hono();
 // Connexion à la base de données MongoDB
 connectDB();
 
-generateFixtures().catch((error) => {
-  console.error("Erreur lors de la génération des fixtures :", error);
-});
+// generateFixtures().catch((error) => {
+//   console.error("Erreur lors de la génération des fixtures :", error);
+// });
 
 // Routes
 app.route("/api", userRoutes);

@@ -6,6 +6,7 @@ import { faker } from "@faker-js/faker";
 import { UserModel } from "../models/userModel";
 import { SlotModel } from "../models/slotsModel";
 import mongoose, { Document, Schema } from 'mongoose';
+import bcrypt from "bcrypt";
 // Liste de villes en France
 const cities = [
   "Paris",
@@ -114,7 +115,8 @@ function createSlots(photographerId: mongoose.Types.ObjectId) { // Utiliser Obje
   export const getFaker = async (c: Context) => {
     try {
       const users = [];
-      for (let i = 0; i < 4; i++) {
+      const hashedPassword = await bcrypt.hash('password', 10);
+      for (let i = 0; i < 30; i++) {
         // const fakerisPhotograph = faker.datatype.boolean();
         const fakerisPhotograph = true;
         const fakerRating = fakerisPhotograph ? createRatings() : [];
@@ -124,7 +126,7 @@ function createSlots(photographerId: mongoose.Types.ObjectId) { // Utiliser Obje
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
           email: faker.internet.email(),
-          password: "leMotDePasse69",
+          password: hashedPassword,
           description: faker.lorem.sentence(),
           isPhotograph: fakerisPhotograph,
           rating: fakerRating,
