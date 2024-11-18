@@ -4,10 +4,14 @@ import { TagModel } from '../models/tagModel';
 // Créer un tag
 export const createTag = async (c: Context) => {
   try {
-    const { label } = await c.req.json();
+    const { label, image } = await c.req.json();
 
     if (!label) {
       return c.json({ message: 'label is required' }, 400);
+    }
+
+    if (!image) {
+      return c.json({ message: 'image is required' }, 400);
     }
 
     const existingTag = await TagModel.findOne({ label });
@@ -16,7 +20,7 @@ export const createTag = async (c: Context) => {
       return c.json({ message: 'Tag already exists' }, 400);
     }
 
-    const tag = new TagModel({ label });
+    const tag = new TagModel({ label, image });
     const savedTag = await tag.save();
 
     return c.json({ success: true, tag: savedTag });
@@ -64,15 +68,19 @@ export const getTagById = async (c: Context) => {
 export const updateTag = async (c: Context) => {
   try {
     const tagId = c.req.param('id');
-    const { label } = await c.req.json();
+    const { label, image } = await c.req.json();
 
     if (!label) {
       return c.json({ message: 'label is required' }, 400);
     }
 
+    if (!image) {
+      return c.json({ message: 'image is required' }, 400);
+    }
+
     const updatedTag = await TagModel.findByIdAndUpdate(
       tagId,
-      { label },
+      { label, image },
       { new: true }
     );
 
