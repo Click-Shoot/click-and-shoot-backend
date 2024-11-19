@@ -103,3 +103,29 @@ export const deleteSlotHandler = async (c: Context) => {
     return c.json({ message: 'Error deleting slot', error }, 500)
   }
 }
+
+export const reserveSlot = async (c: Context) => {
+  try {
+    const { slotId, customersId } = await c.req.json();
+
+    if (!slotId || !customersId) {
+      return c.json({ message: 'slotId and customerId are required' }, 400);
+    }
+
+    // Rechercher le slot par son id
+    const slot = await SlotModel.findById(slotId);
+    if (!slot) {
+      return c.json({ message: 'Slot not found' }, 404);
+    }
+
+    slot.isReserved = true;
+    slot.customersId = customersId;
+
+    await slot.save();
+
+    return c.json({ message: 'Slot reserved successfully', slot });
+  } catch (error) {
+    console.error('Error reserving slot:', error);
+    return c.json({ message: 'Error reserving slot', error }, 500);
+  }
+};
