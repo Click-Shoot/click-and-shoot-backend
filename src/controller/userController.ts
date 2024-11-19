@@ -147,26 +147,54 @@ export const getPhotographers = async (c: Context) => {
 
 export const getUsersByTag = async (c: Context) => {
   try {
-    const tag = c.req.param('tag'); // Récupère le tag depuis la requête
+    // Récupère les tags depuis la requête (paramètre de requête GET ou JSON body)
+    const tags = c.req.query('tags'); // Exemple de format attendu: "tag1,tag2,tag3"
 
-    if (!tag) {
-      return c.json({ message: 'Tag is required' }, 400);
+    if (!tags) {
+      return c.json({ message: 'Tags are required' }, 400);
     }
 
-    // Rechercher les utilisateurs qui ont ce tag
-    const users = await UserModel.find({ tags: tag });
+    // Convertir les tags en tableau
+    const tagArray = tags.split(',');
+
+    // Rechercher les utilisateurs avec au moins un des tags spécifiés
+    const users = await UserModel.find({
+      tags: { $in: tagArray },
+    }).populate('tags'); // Optionnel : pour remplir les informations de tag
 
     if (users.length === 0) {
-      return c.json({ message: 'No users found with this tag' }, 404);
+      return c.json({ message: 'No users found with these tags' }, 404);
     }
 
-    return c.json({ success: true, users });
+    return c.json({ success: true, users }, 200);
   } catch (error) {
-    console.error('Error fetching users by tag:', error);
-    return c.json({ message: 'Error fetching users by tag', error }, 500);
+    console.error('Error fetching users by tags:', error);
+    return c.json({ message: 'Error fetching users by tags', error }, 500);
   }
 };
 
+export const getUsersByLoc = async (c: Context) => {
+  try {
+    // Récupère la localisation depuis les query parameters
+    const queryLocation = c.req.query('location'); 
+
+    if (!queryLocation) {
+      return c.json({ message: 'Location parameter is required' }, 400);
+    }
+    const slots = await SlotModel.find({ location: queryLocation }).populate('photographId');
+    if (slots.length === 0) {
+      return c.json({ message: `No slots found for location "${queryLocation}"` }, 404);
+    }
+    const photographers = slots.map((slot) => slot.photographId);
+    const uniquePhotographers = Array.from(new Set(photographers.map((p) => p._id.toString())))
+      .map((id) => photographers.find((p) => p._id.toString() === id));
+
+    return c.json({ success: true, photographers: uniquePhotographers }, 200);
+  } catch (error) {
+    console.error('Error fetching users by location:', error);
+    return c.json({ message: 'Error fetching users by location', error }, 500);
+  }
+};
 
 export const getTopRatedUsers = async (c: Context) => {
   try {
@@ -182,7 +210,7 @@ export const getTopRatedUsers = async (c: Context) => {
           firstName: 1,
           lastName: 1,
           email: 1,
-          description: 1,
+          description: 1, 
           isPhotograph: 1,
           price: 1,
           avatar: 1,

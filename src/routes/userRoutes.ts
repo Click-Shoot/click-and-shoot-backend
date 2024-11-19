@@ -8,6 +8,7 @@ import {
   getTopRatedUsers,
   getSlotsByUserId,
   getPhotographers,
+  getUsersByLoc,
   getUsersByTag
 } from '../controller/userController'
 import { login, middleware } from '../controller/authController'
@@ -28,16 +29,15 @@ userRoutes.use(
 
 // Définition des routes
 userRoutes.get('/users', jwtAuthMiddleware, getUsers)
+userRoutes.get('/users/notation', jwtAuthMiddleware, getTopRatedUsers)
+userRoutes.get('/users/localitation', jwtAuthMiddleware, getUsersByLoc);
 userRoutes.get('/users/:id', jwtAuthMiddleware, getUserById)
 userRoutes.get('/photographers', jwtAuthMiddleware, getPhotographers)
 userRoutes.post('/users', createUserHandler)
 userRoutes.put('/users/:id', jwtAuthMiddleware, updateUserHandler)
 userRoutes.delete('/users/:id', jwtAuthMiddleware, deleteUserHandler)
-userRoutes.get('/notation', jwtAuthMiddleware, getTopRatedUsers)
 userRoutes.get('/users/:id/slots', jwtAuthMiddleware, getSlotsByUserId)
 userRoutes.post('/login', login)
 userRoutes.get('/users/photographers/:tag', jwtAuthMiddleware, getUsersByTag);
-
-
 
 export default userRoutes
