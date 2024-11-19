@@ -123,6 +123,23 @@ function createSlots(
       slots.push(slot);
     }
 
+    for (let i = 0; i < 2; i++) {
+      // Crée 5 créneaux par photographe
+      const startDate = faker.date.future() 
+      const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); 
+
+      const slot = new SlotModel({
+        start_date: startDate,
+        end_date: endDate,
+        location: cities[faker.number.int({ min: 0, max: cities.length - 1 })],
+        photographId: photographerId,
+        customersId: null,
+        isReserved: false
+      });
+
+      slots.push(slot);
+    }
+
     return slots;
   
 }
