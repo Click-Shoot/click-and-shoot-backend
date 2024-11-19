@@ -119,15 +119,27 @@ export const deleteUserHandler = async (c: Context) => {
 // Récupérer tous les slots réservés par un utilisateur
 export const getSlotsByUserId = async (c: Context) => {
   try {
-    const userId = c.req.param('id') // Récupérer l'ID de l'utilisateur à partir des paramètres de l'URL
-
-    // Récupérer les slots réservés par l'utilisateur
-    const slots = await SlotModel.find({ photographId: userId }) // Filtrer les slots par photographId
-    return c.json(slots) // Retourner les détails des slots
+    // Récupérer l'ID de l'utilisateur à partir des paramètres de l'URL
+    const userId = c.req.param('id');
+    
+    if (!userId) {
+      return c.json({ message: 'User ID is required' }, 400);
+    }
+    const slots = await SlotModel.find({
+      $or: [
+        { photographId: userId },
+        { customersId: userId }
+      ]
+    });
+    if (!slots.length) {
+      return c.json({ message: 'No slots found for this user' }, 404);
+    }
+    return c.json(slots);
   } catch (error) {
-    return c.json({ message: 'Error fetching slots', error }, 500)
+    console.error('Error fetching slots:', error);
+    return c.json({ message: 'Error fetching slots', error: error}, 500);
   }
-}
+};
 
 // Récupérer les utilisateurs qui sont photographes
 export const getPhotographers = async (c: Context) => {
@@ -152,7 +164,6 @@ export const getUsersByTag = async (c: Context) => {
     if (!tag) {
       return c.json({ message: 'Tag is required' }, 400);
     }
-    console.log(tag)
     // Rechercher les utilisateurs qui ont ce tag
     const users = await UserModel.find({ tags: tag });
 
