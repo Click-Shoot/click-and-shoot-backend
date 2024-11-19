@@ -147,31 +147,29 @@ export const getPhotographers = async (c: Context) => {
 
 export const getUsersByTag = async (c: Context) => {
   try {
-    // Récupère les tags depuis la requête (paramètre de requête GET ou JSON body)
-    const tags = c.req.query('tags'); // Exemple de format attendu: "tag1,tag2,tag3"
+    const tag = c.req.param('tag'); // Récupère le tag depuis la requête
 
-    if (!tags) {
-      return c.json({ message: 'Tags are required' }, 400);
+    if (!tag) {
+      return c.json({ message: 'Tag is required' }, 400);
     }
-
-    // Convertir les tags en tableau
-    const tagArray = tags.split(',');
-
-    // Rechercher les utilisateurs avec au moins un des tags spécifiés
-    const users = await UserModel.find({
-      tags: { $in: tagArray },
-    }).populate('tags'); // Optionnel : pour remplir les informations de tag
+    console.log(tag)
+    // Rechercher les utilisateurs qui ont ce tag
+    const users = await UserModel.find({ tags: tag });
 
     if (users.length === 0) {
-      return c.json({ message: 'No users found with these tags' }, 404);
+      return c.json({ message: 'No users found with this tag' }, 404);
     }
 
-    return c.json({ success: true, users }, 200);
+    return c.json({ success: true, users });
   } catch (error) {
-    console.error('Error fetching users by tags:', error);
-    return c.json({ message: 'Error fetching users by tags', error }, 500);
+    console.error('Error fetching users by tag:', error);
+    return c.json({ message: 'Error fetching users by tag', error }, 500);
   }
 };
+
+
+
+
 
 export const getUsersByLoc = async (c: Context) => {
   try {
