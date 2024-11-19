@@ -168,6 +168,41 @@ export const getUsersByTag = async (c: Context) => {
 };
 
 
+export const getTopRatedUsers = async (c: Context) => {
+  try {
+    // Agrégation pour filtrer et trier les utilisateurs par leur moyenne de notes
+    const topRatedUsers = await UserModel.aggregate([
+      {
+        $match: {
+          rating: { $exists: true, $ne: [] }, // Filtre uniquement les utilisateurs ayant des ratings
+        },
+      },
+      {
+        $project: {
+          firstName: 1,
+          lastName: 1,
+          email: 1,
+          description: 1,
+          isPhotograph: 1,
+          price: 1,
+          avatar: 1,
+          averageRating: { $avg: "$rating" }, // Calcule la moyenne des ratings
+        },
+      },
+      {
+        $sort: { averageRating: -1 }, // Trie par moyenne décroissante
+      },
+      {
+        $limit: 10, // Limite à 10 résultats
+      },
+    ]);
 
+    // Retourne la liste des 10 meilleurs utilisateurs
+    return c.json(topRatedUsers, 200);
+  } catch (error) {
+    console.error('Error fetching top-rated users:', error);
+    return c.json({ message: 'Error fetching top-rated users', error }, 500);
+  }
+};
 
   

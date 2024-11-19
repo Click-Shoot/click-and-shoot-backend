@@ -5,7 +5,7 @@ import {
   createUserHandler,
   updateUserHandler,
   deleteUserHandler,
-  getSlotsBookedByUser,
+  getTopRatedUsers,
   getSlotsByUserId,
   getPhotographers,
   getUsersByTag
@@ -33,7 +33,7 @@ userRoutes.get('/photographers', jwtAuthMiddleware, getPhotographers)
 userRoutes.post('/users', createUserHandler)
 userRoutes.put('/users/:id', jwtAuthMiddleware, updateUserHandler)
 userRoutes.delete('/users/:id', jwtAuthMiddleware, deleteUserHandler)
-userRoutes.get('/users/:id/slotsBooked', jwtAuthMiddleware, getSlotsBookedByUser)
+userRoutes.get('/notation', jwtAuthMiddleware, getTopRatedUsers)
 userRoutes.get('/users/:id/slots', jwtAuthMiddleware, getSlotsByUserId)
 userRoutes.post('/login', login)
 userRoutes.get('/users/photographers/:tag', jwtAuthMiddleware, getUsersByTag);
