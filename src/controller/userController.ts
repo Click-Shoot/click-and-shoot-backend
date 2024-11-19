@@ -210,6 +210,7 @@ export const getTopRatedUsers = async (c: Context) => {
           firstName: 1,
           lastName: 1,
           email: 1,
+          rating: 1,
           description: 1, 
           isPhotograph: 1,
           price: 1,
