@@ -15,7 +15,7 @@ const galleryRoutes = new Hono()
 // Définition des routes
 galleryRoutes.get('/gallery', jwtAuthMiddleware, getGalleries)
 galleryRoutes.get('/gallery/:id', jwtAuthMiddleware, getGalleryById)
-galleryRoutes.get('/gallery/user/:id', jwtAuthMiddleware, getGalleriesByUser)
+galleryRoutes.get('/gallery/user/:id', getGalleriesByUser)
 galleryRoutes.post('/gallery', jwtAuthMiddleware, createGalleryHandler)
 galleryRoutes.put('/gallery/:id', jwtAuthMiddleware, updateGalleryHandler)
 galleryRoutes.delete('/gallery/:id', jwtAuthMiddleware, deleteGalleryHandler)

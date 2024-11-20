@@ -36,7 +36,7 @@ userRoutes.get('/photographers', jwtAuthMiddleware, getPhotographers)
 userRoutes.post('/users', createUserHandler)
 userRoutes.put('/users/:id', jwtAuthMiddleware, updateUserHandler)
 userRoutes.delete('/users/:id', jwtAuthMiddleware, deleteUserHandler)
-userRoutes.get('/users/:id/slots', jwtAuthMiddleware, getSlotsByUserId)
+userRoutes.get('/users/:id/slots', getSlotsByUserId)
 userRoutes.post('/login', login)
 userRoutes.get('/users/photographers/:tag', getUsersByTag);
 
