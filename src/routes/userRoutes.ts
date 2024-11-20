@@ -31,7 +31,7 @@ userRoutes.use(
 userRoutes.get('/users', jwtAuthMiddleware, getUsers)
 userRoutes.get('/users/notation', getTopRatedUsers)
 userRoutes.get('/users/localitation', jwtAuthMiddleware, getUsersByLoc);
-userRoutes.get('/users/:id', jwtAuthMiddleware, getUserById)
+userRoutes.get('/users/:id', getUserById)
 userRoutes.get('/photographers', jwtAuthMiddleware, getPhotographers)
 userRoutes.post('/users', createUserHandler)
 userRoutes.put('/users/:id', jwtAuthMiddleware, updateUserHandler)
