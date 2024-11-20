@@ -1,6 +1,7 @@
 import { Context } from 'hono'
 import { UserModel } from '../models/userModel'
 import { SlotModel } from '../models/slotsModel' // Assurez-vous d'importer le modèle Slot
+import { GalleryModel } from '../models/galleryModel' // Assurez-vous d'importer le modèle Slot
 import bcrypt from 'bcrypt'
 // Récupérer tous les utilisateurs
 export const getUsers = async (c: Context) => {
@@ -60,6 +61,16 @@ export const createUserHandler = async (c: Context) => {
     })
 
     await newUser.save()
+
+    if(newUser.isPhotograph){
+      const newGallery = new GalleryModel({ photographId: newUser._id, urls: [
+        '/assets/slider/1.jpeg',
+        '/assets/slider/2.jpeg',
+        '/assets/slider/3.jpeg',
+        '/assets/slider/4.jpeg',
+      ] })
+      await newGallery.save()
+    }
     return c.json(newUser, 201)
   } catch (error) {
     return c.json({ message: 'Error creating user', error }, 500)
