@@ -33,14 +33,17 @@ export const getUserById = async (c: Context) => {
 export const createUserHandler = async (c: Context) => {
   try {
     const { firstName, lastName, email, password, description, rating, tags, stuff, slotsBooked, isPhotograph } = await c.req.json()
-
+    const existingUser = await UserModel.findOne({ email });
     const user = await UserModel.findOne({ email });
+
+    if (existingUser) {
+      return c.json({ message: "Un compte avec cet email existe déjà." }, 409);
+    }
 
     if (user) {
       return c.json({ message: "email deja pris" }, 404);
     }
 
-    // Hash le mot de passe avant de créer l'utilisateur
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const newUser = new UserModel({
