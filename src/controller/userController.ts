@@ -140,26 +140,22 @@ export const getSlotsByUserId = async (c: Context) => {
       return c.json({ message: 'User ID is required' }, 400);
     }
 
-    let filter = {};
-    if (type === 'customer') {
-      filter = { customersId: userId };
-    } else if (type === 'photograph') {
-      filter = { photographId: userId };
-    } else {
+    if (!type || !['customer', 'photograph'].includes(type)) {
       return c.json({ message: 'Invalid type parameter' }, 400);
     }
 
+    const filter =
+      type === 'customer' ? { customersId: userId } : { photographId: userId };
+
     const slots = await SlotModel.find(filter);
 
-    if (!slots.length) {
-      return c.json({ message: 'No slots found for this user' }, 404);
-    }
     return c.json(slots);
   } catch (error) {
     console.error('Error fetching slots:', error);
     return c.json({ message: 'Error fetching slots', error: error }, 500);
   }
 };
+
 
 
 // Récupérer les utilisateurs qui sont photographes
