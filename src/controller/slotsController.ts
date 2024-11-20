@@ -73,10 +73,10 @@ export const createSlotHandler = async (c: Context) => {
 export const updateSlotHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
-    const { start_date, end_date, location, photographId, customersId } = await c.req.json()
+    const { start_date, end_date, location, photographId, customersId, isReserved } = await c.req.json()
     const updatedSlot = await SlotModel.findByIdAndUpdate(
       id,
-      { start_date, end_date, location, photographId,customersId },
+      { start_date, end_date, location, photographId, customersId, isReserved },
       { new: true }
     )
     if (updatedSlot) {
