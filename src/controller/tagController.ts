@@ -1,7 +1,6 @@
 import { Context } from 'hono';
 import { TagModel } from '../models/tagModel';
 
-// Créer un tag
 export const createTag = async (c: Context) => {
   try {
     const { label, image } = await c.req.json();
@@ -30,7 +29,6 @@ export const createTag = async (c: Context) => {
   }
 };
 
-// Lire tous les tags
 export const getAllTags = async (c: Context) => {
   try {
     const tags = await TagModel.find();
@@ -46,7 +44,6 @@ export const getAllTags = async (c: Context) => {
   }
 };
 
-// Lire un tag par ID
 export const getTagById = async (c: Context) => {
   try {
     const tagId = c.req.param('id');
@@ -64,7 +61,6 @@ export const getTagById = async (c: Context) => {
   }
 };
 
-// Mettre à jour un tag
 export const updateTag = async (c: Context) => {
   try {
     const tagId = c.req.param('id');
@@ -95,7 +91,6 @@ export const updateTag = async (c: Context) => {
   }
 };
 
-// Supprimer un tag
 export const deleteTag = async (c: Context) => {
   try {
     const tagId = c.req.param('id');

@@ -1,9 +1,9 @@
 import { Context } from 'hono'
 import { UserModel } from '../models/userModel'
-import { SlotModel } from '../models/slotsModel' // Assurez-vous d'importer le modèle Slot
-import { GalleryModel } from '../models/galleryModel' // Assurez-vous d'importer le modèle Slot
+import { SlotModel } from '../models/slotsModel' 
+import { GalleryModel } from '../models/galleryModel'
 import bcrypt from 'bcrypt'
-// Récupérer tous les utilisateurs
+
 export const getUsers = async (c: Context) => {
   try {
     const users = await UserModel.find()
@@ -13,7 +13,6 @@ export const getUsers = async (c: Context) => {
   }
 }
 
-// Récupérer un utilisateur par son ID
 export const getUserById = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -27,9 +26,6 @@ export const getUserById = async (c: Context) => {
     return c.json({ message: 'Error fetching user', error }, 500)
   }
 }
-
-// Créer un nouvel utilisateur
-
 
 export const createUserHandler = async (c: Context) => {
   try {
@@ -51,7 +47,7 @@ export const createUserHandler = async (c: Context) => {
       firstName,
       lastName,
       email,
-      password: hashedPassword, // Enregistre le mot de passe haché
+      password: hashedPassword,
       description,
       rating,
       tags,
@@ -78,7 +74,6 @@ export const createUserHandler = async (c: Context) => {
 }
 
 
-// Mettre à jour un utilisateur
 export const updateUserHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -98,7 +93,6 @@ export const updateUserHandler = async (c: Context) => {
   }
 }
 
-// Supprimer un utilisateur
 export const deleteUserHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -113,24 +107,6 @@ export const deleteUserHandler = async (c: Context) => {
   }
 }
 
-// Récupérer tous les slots réservés par un utilisateur avec les détails des slots
-// export const getSlotsBookedByUser = async (c: Context) => {
-//   try {
-//     const userId = c.req.param('id') 
-//     const user = await UserModel.findById(userId)
-
-//     if (!user) {
-//       return c.json({ message: 'User not found' }, 404)
-//     }
-
-//     const slots = await SlotModel.find({ _id: { $in: user.slotsBooked } }) 
-//     return c.json(slots) 
-//   } catch (error) {
-//     return c.json({ message: 'Error fetching slots booked', error }, 500)
-//   }
-// }
-
-// Récupérer tous les slots réservés par un utilisateur
 export const getSlotsByUserId = async (c: Context) => {
   try {
     const userId = c.req.param('id');
@@ -158,10 +134,8 @@ export const getSlotsByUserId = async (c: Context) => {
 
 
 
-// Récupérer les utilisateurs qui sont photographes
 export const getPhotographers = async (c: Context) => {
   try {
-    // Rechercher les utilisateurs dont le champ isPhotograph est true
     const photographers = await UserModel.find({ isPhotograph: true });
     if (photographers.length === 0) {
       return c.json({ message: 'No photographers found' }, 404);
@@ -176,12 +150,11 @@ export const getPhotographers = async (c: Context) => {
 
 export const getUsersByTag = async (c: Context) => {
   try {
-    const tag = c.req.param('tag'); // Récupère le tag depuis la requête
+    const tag = c.req.param('tag'); 
 
     if (!tag) {
       return c.json({ message: 'Tag is required' }, 400);
     }
-    // Rechercher les utilisateurs qui ont ce tag
     const users = await UserModel.find({ tags: tag });
 
     if (users.length === 0) {
@@ -201,7 +174,6 @@ export const getUsersByTag = async (c: Context) => {
 
 export const getUsersByLoc = async (c: Context) => {
   try {
-    // Récupère la localisation depuis les query parameters
     const queryLocation = c.req.query('location'); 
 
     if (!queryLocation) {
@@ -224,11 +196,10 @@ export const getUsersByLoc = async (c: Context) => {
 
 export const getTopRatedUsers = async (c: Context) => {
   try {
-    // Agrégation pour filtrer et trier les utilisateurs par leur moyenne de notes
     const topRatedUsers = await UserModel.aggregate([
       {
         $match: {
-          rating: { $exists: true, $ne: [] }, // Filtre uniquement les utilisateurs ayant des ratings
+          rating: { $exists: true, $ne: [] }, 
         },
       },
       {
@@ -241,18 +212,17 @@ export const getTopRatedUsers = async (c: Context) => {
           isPhotograph: 1,
           price: 1,
           avatar: 1,
-          averageRating: { $avg: "$rating" }, // Calcule la moyenne des ratings
+          averageRating: { $avg: "$rating" }, 
         },
       },
       {
-        $sort: { averageRating: -1 }, // Trie par moyenne décroissante
+        $sort: { averageRating: -1 }, 
       },
       {
-        $limit: 10, // Limite à 10 résultats
+        $limit: 10, 
       },
     ]);
 
-    // Retourne la liste des 10 meilleurs utilisateurs
     return c.json(topRatedUsers, 200);
   } catch (error) {
     console.error('Error fetching top-rated users:', error);

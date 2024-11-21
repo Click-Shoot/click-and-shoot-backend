@@ -4,10 +4,10 @@ import { jwtAuthMiddleware } from '../middleware/middlewareAuth'
 
 const tagRoutes = new Hono()
 
-tagRoutes.post('/tags', jwtAuthMiddleware, createTag);              // Créer un tag
-tagRoutes.get('/tags', getAllTags);              // Lire tous les tags
-tagRoutes.get('/tags/:id', getTagById);          // Lire un tag par ID
-tagRoutes.put('/tags/:id', jwtAuthMiddleware, updateTag);           // Mettre à jour un tag
+tagRoutes.post('/tags', jwtAuthMiddleware, createTag); 
+tagRoutes.get('/tags', getAllTags);           
+tagRoutes.get('/tags/:id', getTagById);        
+tagRoutes.put('/tags/:id', jwtAuthMiddleware, updateTag);         
 tagRoutes.delete('/tags/:id', jwtAuthMiddleware, deleteTag);       
 
 export default tagRoutes

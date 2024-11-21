@@ -2,7 +2,6 @@ import { Context } from 'hono'
 import { GalleryModel } from '../models/galleryModel'
 import { UserModel } from '../models/userModel';
 
-// Récupérer toutes les images de la galerie
 export const getGalleries = async (c: Context) => {
   try {
     const galleries = await GalleryModel.find()
@@ -12,7 +11,6 @@ export const getGalleries = async (c: Context) => {
   }
 }
 
-// Récupérer une image de la galerie par son ID
 export const getGalleryById = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -27,7 +25,6 @@ export const getGalleryById = async (c: Context) => {
   }
 }
 
-// Créer une nouvelle image dans la galerie
 export const createGalleryHandler = async (c: Context) => {
   try {
     const { urls, idPhotograph } = await c.req.json()
@@ -43,7 +40,6 @@ export const createGalleryHandler = async (c: Context) => {
   }
 }
 
-// Mettre à jour le tableau des urls de la galerie d'un photograph
 export const updateGalleryHandler = async (c: Context) => {
   try {
       const id = c.req.param('id');
@@ -69,9 +65,6 @@ export const updateGalleryHandler = async (c: Context) => {
   }
 };
 
-
-
-// Supprimer une image de la galerie
 export const deleteGalleryHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -86,18 +79,15 @@ export const deleteGalleryHandler = async (c: Context) => {
   }
 }
 
-// Récupérer les galeries par idPhotograph
 export const getGalleriesByUser = async (c: Context) => {
   try {
     const { id } = c.req.param();
 
-    // Vérifier si l'utilisateur existe
     const user = await UserModel.findById(id);
     if (!user) {
       return c.json({ message: 'User not found' }, 404);
     }
 
-    // Récupérer les galeries associées à ce photographe
     const galleries = await GalleryModel.find({ photographId: id });
 
     if (galleries.length === 0) {

@@ -3,7 +3,6 @@ import { Hono } from "hono";
 
 const swaggerRoutes = new Hono();
 
-// Définition des routes
 swaggerRoutes.get("/ui", (c) => {
   return c.html(`
       <html lang="en">

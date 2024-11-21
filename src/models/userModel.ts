@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose'
 
-// Interface TypeScript pour l'utilisateur
 export interface IUser extends Document {
   firstName: string
   lastName: string
@@ -15,7 +14,6 @@ export interface IUser extends Document {
   avatar: string
 }
 
-// Schéma Mongoose pour l'utilisateur
 const userSchema: Schema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },

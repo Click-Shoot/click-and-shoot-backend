@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-// Interface TypeScript pour le slot
 export interface ISlot extends Document {
   start_date: Date;
   end_date: Date;
@@ -10,7 +9,6 @@ export interface ISlot extends Document {
   isReserved: boolean ;
 }
 
-// Schéma Mongoose pour le slot
 const slotSchema: Schema = new Schema({
   start_date: { type: Date, required: true },
   end_date: { type: Date, required: true },

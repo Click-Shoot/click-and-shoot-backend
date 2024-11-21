@@ -3,7 +3,6 @@ import { jwt, sign as JwtSign,verify as Jwtverify } from "hono/jwt";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-// Middleware pour vérifier le JWT
 export const jwtAuthMiddleware = async (c: Context, next: Next) => {
   const authHeader = c.req.header('Authorization');
   

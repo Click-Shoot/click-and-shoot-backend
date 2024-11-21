@@ -21,13 +21,12 @@ const userRoutes = new Hono()
 userRoutes.use(
     '*',
     cors({
-      origin: 'http://localhost:4000',  // autoriser uniquement cette origine
-      allowMethods: ['GET', 'POST', 'PUT', 'DELETE'], // les méthodes HTTP autorisées
-      allowHeaders: ['Content-Type', 'Authorization'] // les en-têtes autorisés
+      origin: 'http://localhost:4000', 
+      allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowHeaders: ['Content-Type', 'Authorization'] 
     })
 )
 
-// Définition des routes
 userRoutes.get('/users', jwtAuthMiddleware, getUsers)
 userRoutes.get('/users/notation', getTopRatedUsers)
 userRoutes.get('/users/localitation', jwtAuthMiddleware, getUsersByLoc);

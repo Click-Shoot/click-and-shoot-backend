@@ -36,7 +36,6 @@ function createRatings() {
   return ratings;
 }
 
-// Fonction pour générer des tags aléatoires à partir d'une liste prédéfinie
 async function createTags() {
   const possibleTags = [
     { label: "Mariage", image: "/assets/mariage.jpg" },
@@ -54,7 +53,6 @@ async function createTags() {
   if ((await TagModel.countDocuments()) > 0) {
     return;
   }
-  // Insertion des tags dans la BDD
   await TagModel.insertMany(possibleTags);
 }
 
@@ -71,7 +69,6 @@ async function getRandomTags() {
   return Array.from(selectedTagIds);
 }
 
-// Fonction pour générer un ensemble aléatoire de matériel de photographe
 function createStuff() {
   const possibleStuff = [
     "caméra DSLR",
@@ -96,19 +93,16 @@ function createStuff() {
   return stuff;
 }
 
-// Fonction pour créer des slots
 function createSlots(
   photographerId: mongoose.Types.ObjectId,
   customersId?: mongoose.Types.ObjectId
 ) {
    
     const slots = [];
-   // Date de départ pour le créneau
 
     for (let i = 0; i < 4; i++) {
-      // Crée 5 créneaux par photographe
       const startDate = faker.date.future() 
-      const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // Intervalle d'une heure
+      const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); 
 
       const slot = new SlotModel({
         start_date: startDate,
@@ -123,7 +117,6 @@ function createSlots(
     }
 
     for (let i = 0; i < 2; i++) {
-      // Crée 5 créneaux par photographe
       const startDate = faker.date.future() 
       const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); 
 
@@ -215,7 +208,7 @@ export const getFaker = async (c: Context) => {
     }
 
     await SlotModel.insertMany(slots);
-    await GalleryModel.insertMany(gallerys); // Insert the gallery array
+    await GalleryModel.insertMany(gallerys); 
     return c.json({
       message: "Data generated successfully",
       users: insertedUsers,

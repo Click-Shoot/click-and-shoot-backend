@@ -10,10 +10,8 @@ import {
 } from '../controller/slotsController'
 import { jwtAuthMiddleware } from '../middleware/middlewareAuth'
 
-
 const slotsRoutes = new Hono()
 
-// Définition des routes
 slotsRoutes.get('/slots', getSlots)
 slotsRoutes.get('/slots/:id', jwtAuthMiddleware, getSlotById)
 slotsRoutes.post('/slots', jwtAuthMiddleware, createSlotHandler)

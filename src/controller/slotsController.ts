@@ -1,7 +1,6 @@
 import { Context } from 'hono'
 import { SlotModel } from '../models/slotsModel'
 
-// Récupérer tous les slots
 export const getSlots = async (c: Context) => {
   try {
     const slots = await SlotModel.find()
@@ -11,7 +10,6 @@ export const getSlots = async (c: Context) => {
   }
 }
 
-// Récupérer un slot par son ID
 export const getSlotById = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -30,10 +28,8 @@ export const getSlotByReserve = async (c: Context) => {
   try {
     const id = c.req.param('photographId');
 
-    // Récupération du paramètre "photograph" depuis la requête
     const isPhotograph = c.req.query('photograph') === 'true';
 
-    // Construire la requête en fonction de "photograph"
     console.log(isPhotograph)
     let slots;
     if (isPhotograph) {
@@ -42,22 +38,16 @@ export const getSlotByReserve = async (c: Context) => {
       slots = await SlotModel.find({ customerId: id });
     }
 
-    // Vérifie si des slots ont été trouvés
     if (slots.length === 0) {
       return c.json({ message: 'No slots found for the given criteria' }, 404);
     }
 
-    // Retourne les slots trouvés
     return c.json(slots);
   } catch (error) {
-    // Gestion des erreurs
     return c.json({ message: 'Error fetching slots', error: error }, 500);
   }
 };
 
-// Route associée
-
-// Créer un nouveau slot
 export const createSlotHandler = async (c: Context) => {
   try {
     const { start_date, end_date, location, photographId, customersId } = await c.req.json()
@@ -69,7 +59,6 @@ export const createSlotHandler = async (c: Context) => {
   }
 }
 
-// Mettre à jour un slot
 export const updateSlotHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -89,7 +78,6 @@ export const updateSlotHandler = async (c: Context) => {
   }
 }
 
-// Supprimer un slot
 export const deleteSlotHandler = async (c: Context) => {
   try {
     const id = c.req.param('id')
@@ -112,7 +100,6 @@ export const reserveSlot = async (c: Context) => {
       return c.json({ message: 'slotId and customerId are required' }, 400);
     }
 
-    // Rechercher le slot par son id
     const slot = await SlotModel.findById(slotId);
     if (!slot) {
       return c.json({ message: 'Slot not found' }, 404);
